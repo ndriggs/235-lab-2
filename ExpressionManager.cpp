@@ -64,7 +64,7 @@ string ExpressionManager::postfixEvaluate(string postfixExpression){
             operands.push(token_temp);
         }
         else if((tokens[i] == "*") || (tokens[i] == "+") || (tokens[i] == "-") || (tokens[i] == "/")){
-            if(operands.size >= 2){
+            if(operands.size() >= 2){
                 right_operand = operands.top();
                 operands.pop();
                 left_operand = operands.top();
@@ -84,8 +84,12 @@ string ExpressionManager::postfixEvaluate(string postfixExpression){
             cout << "Error, all tokens must be integers or operators." << endl;
         }
     }
-    final_answer = to_string(operands.top())
+    final_answer = to_string(operands.top());
     operands.pop();
+    if(!operands.empty()){
+        cout << "Invalid expression" << endl;
+        return "";
+    }
     return final_answer;
 }
 
