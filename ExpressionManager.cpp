@@ -1,6 +1,7 @@
 #include "ExpressionManager.h"
-
-
+#include <vector>
+#include <string>
+#include <locale>
 
 ExpressionManager::ExpressionManager(){
     
@@ -53,13 +54,15 @@ string ExpressionManager::postfixEvaluate(string postfixExpression){
     int left_operand;
     int token_temp;
     string final_answer;
-    for(int i = 0; i < postfixExpression.length(); i++){  //move the string into a vector of tokens
-        if(postfixExpression.at(i) != ' '){
-            tokens.push_back(postfixExpression.at(i));
-        }
-    }
+    locale loc;
+    tokens = parseTokens(postfixExpression);
+    //for(int i = 0; i < postfixExpression.length(); i++){  //move the string into a vector of tokens
+        //if(postfixExpression.at(i) != ' '){
+            //tokens.push_back(postfixExpression.at(i));
+        //}
+    //}
     for(int i = 0; i < tokens.size(); i++){     //put the digits 
-        if(isdigit(tokens[i])){
+        if(isdigit(tokens[i], loc)){
             token_temp = stoi(tokens[i]);
             operands.push(token_temp);
         }
@@ -106,5 +109,21 @@ string ExpressionManager::postfixEvaluate(string postfixExpression){
 * otherwise, return the correct postfix expression as a string.
 */
 string ExpressionManager::infixToPostfix(string infixExpression){
+    string postfix;
+    stack<string> operators;
+    vector<string> tokens;
+    tokens = parseTokens(infixExpression);
     
+}
+
+vector<string> ExpressionManager::parseTokens(string expression)
+{
+  stringstream ss(expression);
+  string token;
+  vector<string> tokens;
+  while(getline(ss, token, ' '))
+  {
+    tokens.push_back(token);
+  }
+  return tokens;
 }

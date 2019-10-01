@@ -3,7 +3,7 @@
 #include <string>
 #include <stack>
 #include <vector>
-
+#include <sstream>
 class ExpressionManager : public ExpressionManagerInterface {
 
 private :
@@ -60,6 +60,8 @@ public :
 	* otherwise, return the correct postfix expression as a string.
 	*/
 	string infixToPostfix(string infixExpression);
+	
+	vector<string> parseTokens(string expression);
     
     
 };
