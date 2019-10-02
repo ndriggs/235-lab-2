@@ -20,7 +20,22 @@ ExpressionManager::~ExpressionManager(){
 */
 
 bool ExpressionManager::isBalanced(string expression){
-    
+    stack<char> paren;
+    bool balanced = true;
+    for(int i = 0; i < expression.length(); i++){
+        if(isleftParen(expression[i])){
+            paren.push(expression[i]);
+        } else if(isrightParen(expression[i])){
+            if(paren.empty()){
+                balanced = false;
+            }
+            else if(isPair(paren.top(), expression[i])){
+                paren.pop();
+            } else {
+                balanced = false;
+            }
+        }
+    }
 }
 
 /**
@@ -36,7 +51,39 @@ bool ExpressionManager::isBalanced(string expression){
 * otherwise, return the correct infix expression as a string.
 */
 string ExpressionManager::postfixToInfix(string postfixExpression){
-    
+    stack<string> expression;
+    vector<string> tokens;
+    string left_part;
+    string right_part;
+    string final_answer;
+    string new_expression;
+    tokens = parseTokens(postfixExpression);
+    for(int i = 0; i < tokens.size(); i++){
+        if(is_digit(tokens[i])){
+            expression.push(tokens[i]);
+        } else if(is_operator(tokens[i])){
+            if(expression.size() >= 2){
+                if(is_operator(tokens[i])){
+                    right_part = expression.top();
+                    expression.pop();
+                    left_part = expression.top();
+                    expression.pop();
+                    new_expression = "( " + left_part + " " + tokens[i] + " " + right_part + " )";
+                    expression.push(new_expression);
+                }
+            }else{
+                return "invalid";
+            }
+        } 
+    }
+    if(expression.size() == 1){
+        return expression.top();
+    }
+    else{
+        return "invalid";e if the next character is a closing parenthesis
+
+    if stack is 
+    }
 }
 /*
 * Evaluates a postfix expression returns the result as a string
@@ -54,7 +101,6 @@ string ExpressionManager::postfixEvaluate(string postfixExpression){
     int left_operand;
     int token_temp;
     string final_answer;
-    locale loc;
     tokens = parseTokens(postfixExpression);
     //for(int i = 0; i < postfixExpression.length(); i++){  //move the string into a vector of tokens
         //if(postfixExpression.at(i) != ' '){
@@ -157,3 +203,31 @@ bool ExpressionManager::is_operator(string s){
         return false;
     }
 }
+
+bool ExpressionManager::isleftParen(string s){
+    if((s == "[") || (s == "{") || (s == "(")){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool ExpressionManager::isrightParen(string s){
+    if((s == "]") || (s == "}") || (s == ")")){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool ExpressionManager::isPair(string left, string right){
+    if(((left == "[") && (right == "]")) || ((left == "{") && (right == "}")) || ((left == "(") && (right == ")")){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+//bool ExpressionManager::isPrecedent(string on_stack, string in_expression){
+    
+//}

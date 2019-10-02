@@ -5,7 +5,7 @@ int main() {
     ExpressionManager trial1;
     string ans;
     
-    ans = trial1.postfixEvaluate("1 7 + 3 * 3 - 2 *");
-    cout << "The answer is: " << ans << endl;
+    ans = trial1.postfixEvaluate("1 2 + 3 /");
+    cout << "The answer is: " << ans << "|" << endl;
     return 0;
 }

@@ -64,4 +64,7 @@ public :
 	vector<string> parseTokens(string expression);
     bool is_digit(string s);
     bool is_operator(string s);
+    bool isleftParen(string s);
+    bool isrightParen(string s);
+    bool isPair(string left, string right);
 };
