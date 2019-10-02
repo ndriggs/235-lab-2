@@ -62,6 +62,6 @@ public :
 	string infixToPostfix(string infixExpression);
 	
 	vector<string> parseTokens(string expression);
-    
-    
+    bool is_digit(string s);
+    bool is_operator(string s);
 };

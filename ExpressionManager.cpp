@@ -62,11 +62,11 @@ string ExpressionManager::postfixEvaluate(string postfixExpression){
         //}
     //}
     for(int i = 0; i < tokens.size(); i++){     //put the digits 
-        if(isdigit(tokens[i], loc)){
+        if(is_digit(tokens[i])){
             token_temp = stoi(tokens[i]);
             operands.push(token_temp);
         }
-        else if((tokens[i] == "*") || (tokens[i] == "+") || (tokens[i] == "-") || (tokens[i] == "/")){
+        else if(is_operator(tokens[i])){
             if(operands.size() >= 2){
                 right_operand = operands.top();
                 operands.pop();
@@ -113,6 +113,20 @@ string ExpressionManager::infixToPostfix(string infixExpression){
     stack<string> operators;
     vector<string> tokens;
     tokens = parseTokens(infixExpression);
+    for(int i = 0; i < tokens.size(); i++){
+        if(is_digit(tokens[i])){
+            postfix += tokens[i];
+            postfix += " ";
+        } else if(is_operator(tokens[i])){
+            //process_operator(stack and postfix);
+            //if(process operator fails){
+                //cout << "an error" << endl;
+            //}
+        } else{
+            cout << "SYNTAX ERROR, all tokens must be digits or operators." << endl;
+        }
+    }
+    postfixEvaluate(postfix);
     
 }
 
@@ -126,4 +140,20 @@ vector<string> ExpressionManager::parseTokens(string expression)
     tokens.push_back(token);
   }
   return tokens;
+}
+
+bool ExpressionManager::is_digit(string s){
+    if((s == "0") || (s == "1") || (s == "2") || (s == "3") || (s == "4") || (s == "5") || (s == "6") || (s == "7") || (s == "8") || (s == "9")){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool ExpressionManager::is_operator(string s){
+    if((s == "*") || (s == "+") || (s == "-") || (s == "/")){
+        return true;
+    }else{
+        return false;
+    }
 }
