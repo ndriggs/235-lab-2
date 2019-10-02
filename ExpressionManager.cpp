@@ -20,7 +20,7 @@ ExpressionManager::~ExpressionManager(){
 */
 
 bool ExpressionManager::isBalanced(string expression){
-    stack<char> paren;
+    stack<string> paren;
     bool balanced = true;
     for(int i = 0; i < expression.length(); i++){
         if(isleftParen(expression[i])){
@@ -130,14 +130,13 @@ string ExpressionManager::postfixEvaluate(string postfixExpression){
             }
             
         } else {
-            cout << "Error, all tokens must be integers or operators." << endl;
+            return "invalid";
         }
     }
     final_answer = to_string(operands.top());
     operands.pop();
     if(!operands.empty()){
-        cout << "Invalid expression" << endl;
-        return "";
+        return "invalid";
     }
     return final_answer;
 }
@@ -169,7 +168,7 @@ string ExpressionManager::infixToPostfix(string infixExpression){
                 //cout << "an error" << endl;
             //}
         } else{
-            cout << "SYNTAX ERROR, all tokens must be digits or operators." << endl;
+            return "invalid";
         }
     }
     postfixEvaluate(postfix);
@@ -221,7 +220,7 @@ bool ExpressionManager::isrightParen(string s){
 }
 
 bool ExpressionManager::isPair(string left, string right){
-    if(((left == "[") && (right == "]")) || ((left == "{") && (right == "}")) || ((left == "(") && (right == ")")){
+    if(((left == "[") && (right == "]")) || ((left == "{") && (right == "}")) || ((left == "(") && (right == ")"))){
         return true;
     }else{
         return false;
