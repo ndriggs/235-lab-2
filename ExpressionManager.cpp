@@ -20,21 +20,28 @@ ExpressionManager::~ExpressionManager(){
 */
 
 bool ExpressionManager::isBalanced(string expression){
-    stack<string> paren;
+    stack<char> paren;
     bool balanced = true;
-    for(int i = 0; i < expression.length(); i++){
-        if(isleftParen(expression[i])){
-            paren.push(expression[i]);
-        } else if(isrightParen(expression[i])){
+    int index = 0;
+    while((balanced == true) && (index < expression.length())){
+        if(isleftParen(expression[index])){
+            paren.push(expression[index]);
+        } else if(isrightParen(expression[index])){
             if(paren.empty()){
                 balanced = false;
             }
-            else if(isPair(paren.top(), expression[i])){
-                paren.pop();
-            } else {
+            if(!isPair(paren.top(), expression[index])){
                 balanced = false;
+            } else {
+                paren.pop();
             }
         }
+        index += 1;
+    }
+    if(balanced && paren.empty()){
+        return true;
+    }else{
+        return false;
     }
 }
 
@@ -80,9 +87,7 @@ string ExpressionManager::postfixToInfix(string postfixExpression){
         return expression.top();
     }
     else{
-        return "invalid";e if the next character is a closing parenthesis
-
-    if stack is 
+        return "invalid";
     }
 }
 /*
@@ -203,24 +208,24 @@ bool ExpressionManager::is_operator(string s){
     }
 }
 
-bool ExpressionManager::isleftParen(string s){
-    if((s == "[") || (s == "{") || (s == "(")){
+bool ExpressionManager::isleftParen(char s){
+    if((s == '[') || (s == '{') || (s == '(')){
         return true;
     }else{
         return false;
     }
 }
 
-bool ExpressionManager::isrightParen(string s){
-    if((s == "]") || (s == "}") || (s == ")")){
+bool ExpressionManager::isrightParen(char s){
+    if((s == ']') || (s == '}') || (s == ')')){
         return true;
     }else{
         return false;
     }
 }
 
-bool ExpressionManager::isPair(string left, string right){
-    if(((left == "[") && (right == "]")) || ((left == "{") && (right == "}")) || ((left == "(") && (right == ")"))){
+bool ExpressionManager::isPair(char left, char right){
+    if(((left == '[') && (right == ']')) || ((left == '{') && (right == '}')) || ((left == '(') && (right == ')'))){
         return true;
     }else{
         return false;

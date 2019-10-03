@@ -3,9 +3,14 @@
 
 int main() {
     ExpressionManager trial1;
-    string ans;
+    bool ans;
     
-    ans = trial1.postfixEvaluate("1 2 + 3 /");
-    cout << "The answer is: " << ans << "|" << endl;
+    ans = trial1.isBalanced("{ [ ) }");
+    cout << "The answer is: " << endl;
+    if(ans){
+        cout << "It worked!" << endl;
+    }else{
+        cout << "unbalanced. slow things down" << endl;
+    }
     return 0;
 }
