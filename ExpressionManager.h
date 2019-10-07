@@ -62,10 +62,11 @@ public :
 	string infixToPostfix(string infixExpression);
 	
 	vector<string> parseTokens(string expression);
+	bool hasPrecendence(char op, char stackTop);
     bool is_digit(string s);
     bool is_operator(string s);
     bool isleftParen(char s);
     bool isrightParen(char s);
     bool isPair(char left, char right);
-    bool process_operator(stack<string> &opStack, string &postfix, string &op)
+    bool process_operator(stack<char> &opStack, string &postfix, char &op);
 };

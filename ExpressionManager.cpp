@@ -160,7 +160,7 @@ string ExpressionManager::postfixEvaluate(string postfixExpression){
 */
 string ExpressionManager::infixToPostfix(string infixExpression){
     string postfix;
-    stack<string> operators;
+    stack<char> operators;
     vector<string> tokens;
     tokens = parseTokens(infixExpression);
     for(int i = 0; i < tokens.size(); i++){
@@ -168,7 +168,9 @@ string ExpressionManager::infixToPostfix(string infixExpression){
             postfix += tokens[i];
             postfix += " ";
         } else if(is_operator(tokens[i])){
-            //process_operator(stack and postfix);
+            if(!process_operator(operators, postfix, tokens[i])){
+                return "invalid";
+            }
             //if(process operator fails){
                 //cout << "an error" << endl;
             //}
@@ -176,8 +178,57 @@ string ExpressionManager::infixToPostfix(string infixExpression){
             return "invalid";
         }
     }
-    postfixEvaluate(postfix);
+    while(!operators.empty()){
+        postfix += operators.top();
+        operators.pop();
+        if(!operators.empty()){
+            postfix += " ";
+        }
+    }
+    if(postfixEvaluate(postfix) != "invalid"){
+        return postfix;
+    } else{
+        return "invalid";
+    }
     
+}
+
+bool ExpressionManager::process_operator(stack<char> &opStack, string &postfix, char &op){
+    if((opStack.empty()) || (isleftParen(opStack.top())) || (isleftParen(op))){
+        opStack.push(op);
+        return true;
+    } else if(isrightParen(op)){
+        while(!isPair(opStack.top(), op)){
+            postfix += opStack.top();
+            postfix += " ";
+            opStack.pop();
+            if(opStack.empty()){
+                return false;
+            }
+        }
+        opStack.pop();
+        return true;
+    } else {
+        while(hasPrecendence(op, opStack.top())){
+            postfix += opStack.top();
+            postfix += " ";
+            opStack.pop();
+            opStack.push(op);
+        }
+        return true;
+    }
+}
+
+bool ExpressionManager::hasPrecendence(char op, char stackTop){
+    if((stackTop == '*') || (stackTop == '/') || (stackTop == '%')){
+        return true;
+    } else if(((stackTop == '+') || (stackTop == '-')) && ((op != '*') && (op != '/') && (op == '%'))){
+        return true;
+    } else if(((isleftParen(stackTop)) || (isrightParen(stackTop))) && ((isleftParen(op)) || isrightParen(op))){
+        return true;
+    } else{
+        return false;
+    }
 }
 
 vector<string> ExpressionManager::parseTokens(string expression)
