@@ -19,7 +19,7 @@ ExpressionManager::~ExpressionManager(){
 * @return false otherwise
 */
 
-bool ExpressionManager::isBalanced(string expression){
+bool ExpressionManager::isBalanced(string expression){ /// need to make sure not popping when stack is empty
     stack<char> paren;
     bool balanced = true;
     int index = 0;
@@ -168,7 +168,7 @@ string ExpressionManager::infixToPostfix(string infixExpression){
             postfix += tokens[i];
             postfix += " ";
         } else if(is_operator(tokens[i])){
-            if(!process_operator(operators, postfix, tokens[i])){
+            if(!process_operator(operators, postfix, tokens[i][0])){
                 return "invalid";
             }
             //if(process operator fails){
