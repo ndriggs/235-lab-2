@@ -19,7 +19,7 @@ ExpressionManager::~ExpressionManager(){
 * @return false otherwise
 */
 
-bool ExpressionManager::isBalanced(string expression){ /// need to make sure not popping when stack is empty
+bool ExpressionManager::isBalanced(string expression){ /// good
     stack<char> paren;
     bool balanced = true;
     int index = 0;
@@ -30,7 +30,7 @@ bool ExpressionManager::isBalanced(string expression){ /// need to make sure not
             if(paren.empty()){
                 balanced = false;
             }
-            if(!isPair(paren.top(), expression[index])){
+            else if(!isPair(paren.top(), expression[index])){
                 balanced = false;
             } else {
                 paren.pop();
@@ -57,7 +57,7 @@ bool ExpressionManager::isBalanced(string expression){ /// need to make sure not
 * return the string "invalid" if postfixExpression is not a valid postfix expression.
 * otherwise, return the correct infix expression as a string.
 */
-string ExpressionManager::postfixToInfix(string postfixExpression){
+string ExpressionManager::postfixToInfix(string postfixExpression){ //need to fix, too many invalids
     stack<string> expression;
     vector<string> tokens;
     string left_part;
@@ -128,9 +128,13 @@ string ExpressionManager::postfixEvaluate(string postfixExpression){
                 } else if(tokens[i] == "-"){
                     operands.push(left_operand - right_operand);
                 } else if(tokens[i] == "/"){
-                    operands.push(left_operand / right_operand);
+                    if(right_operand != 0)
+                        operands.push(left_operand / right_operand);
                 } else if(tokens[i] == "*"){
                     operands.push(left_operand * right_operand);
+                } else if(tokens[i] == "%"){
+                    if(right_operand != 0)
+                        operands.push(left_operand % right_operand);
                 }
             }
             
@@ -138,8 +142,10 @@ string ExpressionManager::postfixEvaluate(string postfixExpression){
             return "invalid";
         }
     }
-    final_answer = to_string(operands.top());
-    operands.pop();
+    if(!operands.empty()){
+        final_answer = to_string(operands.top());
+        operands.pop();
+    }
     if(!operands.empty()){
         return "invalid";
     }
@@ -158,7 +164,7 @@ string ExpressionManager::postfixEvaluate(string postfixExpression){
 * return the string "invalid" if infixExpression is not a valid infix expression.
 * otherwise, return the correct postfix expression as a string.
 */
-string ExpressionManager::infixToPostfix(string infixExpression){
+string ExpressionManager::infixToPostfix(string infixExpression){ // only prints invalids
     string postfix;
     stack<char> operators;
     vector<string> tokens;
@@ -168,7 +174,8 @@ string ExpressionManager::infixToPostfix(string infixExpression){
             postfix += tokens[i];
             postfix += " ";
         } else if(is_operator(tokens[i])){
-            if(!process_operator(operators, postfix, tokens[i][0])){
+            bool success = process_operator(operators, postfix, tokens[i][0]);
+            if(!success){
                 return "invalid";
             }
             //if(process operator fails){
@@ -194,6 +201,7 @@ string ExpressionManager::infixToPostfix(string infixExpression){
 }
 
 bool ExpressionManager::process_operator(stack<char> &opStack, string &postfix, char &op){
+    cout << op << endl;
     if((opStack.empty()) || (isleftParen(opStack.top())) || (isleftParen(op))){
         opStack.push(op);
         return true;
@@ -209,12 +217,12 @@ bool ExpressionManager::process_operator(stack<char> &opStack, string &postfix, 
         opStack.pop();
         return true;
     } else {
-        while(hasPrecendence(op, opStack.top())){
+        while((!opStack.empty()) && (hasPrecendence(op, opStack.top()))){
             postfix += opStack.top();
             postfix += " ";
             opStack.pop();
-            opStack.push(op);
         }
+        opStack.push(op);
         return true;
     }
 }
@@ -222,7 +230,7 @@ bool ExpressionManager::process_operator(stack<char> &opStack, string &postfix, 
 bool ExpressionManager::hasPrecendence(char op, char stackTop){
     if((stackTop == '*') || (stackTop == '/') || (stackTop == '%')){
         return true;
-    } else if(((stackTop == '+') || (stackTop == '-')) && ((op != '*') && (op != '/') && (op == '%'))){
+    } else if(((stackTop == '+') || (stackTop == '-')) && ((op != '*') && (op != '/') && (op != '%'))){
         return true;
     } else if(((isleftParen(stackTop)) || (isrightParen(stackTop))) && ((isleftParen(op)) || isrightParen(op))){
         return true;
@@ -243,16 +251,18 @@ vector<string> ExpressionManager::parseTokens(string expression)
   return tokens;
 }
 
-bool ExpressionManager::is_digit(string s){
-    if((s == "0") || (s == "1") || (s == "2") || (s == "3") || (s == "4") || (s == "5") || (s == "6") || (s == "7") || (s == "8") || (s == "9")){
-        return true;
-    }else{
-        return false;
+bool ExpressionManager::is_digit(string str){
+    for(int i = 0; i < str.length(); i++){
+        char s = str[i];
+        if(!((s == '0') || (s == '1') || (s == '2') || (s == '3') || (s == '4') || (s == '5') || (s == '6') || (s == '7') || (s == '8') || (s == '9'))){
+            return false;
+        }
     }
+    return true;
 }
 
 bool ExpressionManager::is_operator(string s){
-    if((s == "*") || (s == "+") || (s == "-") || (s == "/")){
+    if((s == "*") || (s == "+") || (s == "-") || (s == "/") || (s == "%")){
         return true;
     }else{
         return false;
